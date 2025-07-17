@@ -1,0 +1,35 @@
+name: Uniadvisor model training
+
+on:
+ workflow_dispatch:
+
+jobs:
+  clearml-training:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        
+      - name: Install Clearml
+        run: |
+          pip install clearml
+      - name: create clearml-conf
+        run: |
+         echo ${{ vars.CLEARML_CONF }} > ~/clearml.conf
+         cat ~/clearml.conf
+         
+      - name: Create ClearML config
+        run: |
+          mkdir -p ~/
+          cat > ~/clearml1.conf << EOF
+          api {
+            api_server: ${{ secrets.CLEARML_API_SERVER }}
+            web_server: ${{ secrets.CLEARML_API_SERVER }}
+            files_server: ${{ secrets.CLEARML_FILE_SERVER }}
+            credentials {
+              access_key: ${{ secrets.CLEARML_API_ACCESS_KEY }}
+              secret_key: ${{ secrets.CLEARML_API_SECRET_KEY }}
+           }
+          }
+           EOF
+           cat ~/clearml1.conf
